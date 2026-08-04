@@ -339,7 +339,7 @@
   <div id="frame"></div>
   <button class="mute-btn" id="btn-mute" aria-label="Ativar ou silenciar som">🔊</button>
   <button class="tap-hint" id="tap-hint">Toque para o som ♪</button>
-  <audio id="bgm" src="audio.mp3" loop preload="auto"></audio>
+  <audio id="bgm" src="audio_bg.mp3" loop preload="auto"></audio>
 </div>
 
 <script>
@@ -354,7 +354,6 @@
   const v2 = document.getElementById('video2');
   const v3 = document.getElementById('video3');
   const bgm = document.getElementById('bgm');
-  bgm.volume = 0.35;
   bgm.loop = true;
 
   const btnOpen = document.getElementById('btn-open');
@@ -431,10 +430,11 @@
       // will retry on the same tap-hint fallback used by the videos
     });
 
-    setTimeout(() => {
-      goTo(sceneGift);
-      playScene(v1, { rate: 0.6 });
-    }, 550);
+    // Play video 1 in the same synchronous gesture (no setTimeout) —
+    // iOS Safari only allows sound to start if play() fires immediately
+    // within the click handler, not after a delay.
+    goTo(sceneGift);
+    playScene(v1, { rate: 0.6 });
   }
 
   btnOpen.addEventListener('click', openGift, { once:true });
