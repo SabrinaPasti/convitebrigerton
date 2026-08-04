@@ -339,6 +339,7 @@
   <div id="frame"></div>
   <button class="mute-btn" id="btn-mute" aria-label="Ativar ou silenciar som">🔊</button>
   <button class="tap-hint" id="tap-hint">Toque para o som ♪</button>
+  <audio id="bgm" src="audio.mp3" loop preload="auto"></audio>
 </div>
 
 <script>
@@ -352,6 +353,9 @@
   const v1 = document.getElementById('video1');
   const v2 = document.getElementById('video2');
   const v3 = document.getElementById('video3');
+  const bgm = document.getElementById('bgm');
+  bgm.volume = 0.35;
+  bgm.loop = true;
 
   const btnOpen = document.getElementById('btn-open');
   const seal = document.getElementById('seal');
@@ -365,13 +369,13 @@
   }
 
   function updateMuteIcon(){
-    const anyMuted = [v1,v2,v3].some(v => v.muted);
+    const anyMuted = [v1,v2,v3,bgm].some(v => v.muted);
     btnMute.textContent = anyMuted ? '🔇' : '🔊';
   }
 
   btnMute.addEventListener('click', () => {
     userMuted = !userMuted;
-    [v1,v2,v3].forEach(v => v.muted = userMuted);
+    [v1,v2,v3,bgm].forEach(v => v.muted = userMuted);
     updateMuteIcon();
   });
 
@@ -406,6 +410,7 @@
             tapHint.classList.remove('show');
             updateMuteIcon();
           }).catch(()=>{});
+          bgm.play().catch(()=>{});
           stage.removeEventListener('click', resume);
         };
         stage.addEventListener('click', resume);
@@ -417,6 +422,14 @@
     seal.classList.add('cracking');
     sceneCover.classList.add('cover-fade-out');
     stage.classList.add('frame-hide');
+
+    bgm.muted = userMuted;
+    bgm.play().then(() => {
+      showMuteControl();
+      updateMuteIcon();
+    }).catch(() => {
+      // will retry on the same tap-hint fallback used by the videos
+    });
 
     setTimeout(() => {
       goTo(sceneGift);
