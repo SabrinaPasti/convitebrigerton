@@ -339,7 +339,8 @@
   <div id="frame"></div>
   <button class="mute-btn" id="btn-mute" aria-label="Ativar ou silenciar som">🔊</button>
   <button class="tap-hint" id="tap-hint">Toque para o som ♪</button>
-  <audio id="bgm" src="audio_bg.mp3" loop preload="auto"></audio>
+  <video id="bgm" src="bgm_video.mp4" loop playsinline webkit-playsinline preload="auto"
+    style="position:absolute; width:2px; height:2px; opacity:0; pointer-events:none; top:0; left:0;"></video>
 </div>
 
 <script>
